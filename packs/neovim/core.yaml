@@ -1,0 +1,342 @@
+id: core
+app: neovim
+name: Core Neovim
+version: 1
+lessons:
+  - id: basics
+    title: Modes and basics
+    items:
+      - id: insert-mode
+        action: core.insert
+        prompt: Enter insert mode at the cursor
+        type: keys
+        keys: ["i"]
+        surface: { mock: editor }
+      - id: normal-mode
+        action: core.normal_mode
+        prompt: Return to normal mode
+        type: keys
+        keys: ["<Esc>", "<C-[>"]
+        surface: { mock: editor, mode: insert }
+      - id: save
+        action: core.write
+        prompt: Save the file
+        type: keys
+        keys: [":w<CR>"]
+        surface: { mock: editor, modified: true }
+      - id: quit
+        action: core.quit
+        prompt: Close the window
+        type: keys
+        keys: [":q<CR>"]
+        surface: { mock: editor }
+      - id: save-and-quit
+        action: core.write_quit
+        prompt: Save the file and close the window
+        type: keys
+        keys: ["ZZ", ":wq<CR>", ":x<CR>"]
+        surface: { mock: editor, modified: true }
+      - id: quit-without-saving
+        action: core.quit_discard
+        prompt: Close the window and discard unsaved changes
+        type: keys
+        keys: [":q!<CR>", "ZQ"]
+        surface: { mock: editor, modified: true }
+      - id: undo
+        action: core.undo
+        prompt: Undo the last change
+        type: keys
+        keys: ["u"]
+        surface: { mock: editor, modified: true }
+      - id: redo
+        action: core.redo
+        prompt: Redo the change you just undid
+        type: keys
+        keys: ["<C-r>"]
+        surface: { mock: editor }
+
+  - id: motions
+    title: Motions
+    items:
+      - id: word-forward
+        action: core.motion.word_forward
+        prompt: Move to the start of the next word
+        type: goal
+        keys: ["w"]
+        start: "|const total = price * quantity;"
+        end: "const |total = price * quantity;"
+      - id: word-back
+        action: core.motion.word_back
+        prompt: Move back to the start of this word
+        type: goal
+        keys: ["b"]
+        start: "const total = price * quanti|ty;"
+        end: "const total = price * |quantity;"
+      - id: word-end
+        action: core.motion.word_end
+        prompt: Move to the end of this word
+        type: goal
+        keys: ["e"]
+        start: "const |total = price * quantity;"
+        end: "const tota|l = price * quantity;"
+      - id: line-start
+        action: core.motion.line_start
+        prompt: Move to the first column of the line
+        type: goal
+        keys: ["0"]
+        start: "const total = price * |quantity;"
+        end: "|const total = price * quantity;"
+      - id: line-end
+        action: core.motion.line_end
+        prompt: Move to the end of the line
+        type: goal
+        keys: ["$"]
+        start: "|const total = price * quantity;"
+        end: "const total = price * quantity|;"
+      - id: first-non-blank
+        action: core.motion.first_non_blank
+        prompt: Move to the first non-blank character of the line
+        type: goal
+        keys: ["^"]
+        start: "    return total * |rate;"
+        end: "    |return total * rate;"
+      - id: file-top
+        action: core.motion.file_top
+        prompt: Move to the first line of the file
+        type: goal
+        keys: ["gg"]
+        start: |-
+          import fs from "fs";
+          import path from "path";
+
+          const root = path.resolve(".");
+          const files = fs.readdirSync(root);
+          |console.log(files);
+        end: |-
+          |import fs from "fs";
+          import path from "path";
+
+          const root = path.resolve(".");
+          const files = fs.readdirSync(root);
+          console.log(files);
+      - id: file-bottom
+        action: core.motion.file_bottom
+        prompt: Move to the last line of the file
+        type: goal
+        keys: ["G"]
+        start: |-
+          |import fs from "fs";
+          import path from "path";
+
+          const root = path.resolve(".");
+          const files = fs.readdirSync(root);
+          console.log(files);
+        end: |-
+          import fs from "fs";
+          import path from "path";
+
+          const root = path.resolve(".");
+          const files = fs.readdirSync(root);
+          |console.log(files);
+      - id: find-char
+        action: core.motion.find_char
+        prompt: Jump to the * on this line
+        type: goal
+        keys: ["f*"]
+        start: "|const total = price * quantity;"
+        end: "const total = price |* quantity;"
+      - id: till-char
+        action: core.motion.till_char
+        prompt: Jump to just before the comma
+        type: goal
+        keys: ["t,"]
+        start: "|call(first, second)"
+        end: "call(firs|t, second)"
+      - id: count-words
+        action: core.motion.count
+        prompt: Move forward three words
+        type: goal
+        keys: ["3w"]
+        start: "|one two three four five"
+        end: "one two three |four five"
+      - id: next-paragraph
+        action: core.motion.paragraph_forward
+        prompt: Jump to the blank line after this paragraph
+        type: goal
+        keys: ["}"]
+        start: |-
+          |const a = 1;
+          const b = 2;
+          const c = 3;
+          const d = 4;
+
+          export { a, b, c, d };
+        end: |-
+          const a = 1;
+          const b = 2;
+          const c = 3;
+          const d = 4;
+          |
+          export { a, b, c, d };
+
+  - id: operators
+    title: Operators
+    items:
+      - id: delete-char
+        action: core.edit.delete_char
+        prompt: Delete the character under the cursor
+        type: goal
+        keys: ["x"]
+        start: "the qu|uick brown fox"
+        end: "the qu|ick brown fox"
+      - id: replace-char
+        action: core.edit.replace_char
+        prompt: Replace the character under the cursor with a
+        type: goal
+        keys: ["ra"]
+        start: "the c|et sat on the mat"
+        end: "the c|at sat on the mat"
+      - id: delete-word
+        action: core.operator.delete_word
+        prompt: Delete from the cursor to the start of the next word
+        type: goal
+        keys: ["dw"]
+        start: "the |quick brown fox"
+        end: "the |brown fox"
+      - id: delete-line
+        action: core.operator.delete_line
+        prompt: Delete the current line
+        type: goal
+        keys: ["dd"]
+        start: |-
+          const a = 1;
+          const |b = 2;
+          const c = 3;
+        end: |-
+          const a = 1;
+          |const c = 3;
+      - id: delete-to-end
+        action: core.operator.delete_to_end
+        prompt: Delete from the cursor to the end of the line
+        type: goal
+        keys: ["D", "d$"]
+        start: "const total = price| // old comment"
+        end: "const total = pric|e"
+      - id: delete-till
+        action: core.operator.delete_till
+        prompt: Delete everything up to the closing parenthesis
+        type: goal
+        keys: ["dt)"]
+        start: "call(|first, second)"
+        end: "call(|)"
+      - id: change-word
+        action: core.operator.change_word
+        prompt: Change the word under the cursor to total, then return to normal mode
+        type: goal
+        keys: ["cwtotal<Esc>"]
+        start: "let |count = 0;"
+        end: "let tota|l = 0;"
+      - id: change-to-end
+        action: core.operator.change_to_end
+        prompt: Change the rest of the line to true, then return to normal mode
+        type: goal
+        keys: ["Ctrue<Esc>", "c$true<Esc>"]
+        start: "enabled = |false"
+        end: "enabled = tru|e"
+      - id: duplicate-line
+        action: core.operator.yank_line_paste
+        prompt: Duplicate the current line below itself
+        type: goal
+        keys: ["yyp"]
+        start: |-
+          |alpha
+          beta
+        end: |-
+          alpha
+          |alpha
+          beta
+      - id: indent-line
+        action: core.operator.indent
+        prompt: Indent the current line one level
+        type: goal
+        keys: [">>"]
+        start: |-
+          if (ok) {
+          |run();
+          }
+        end: |-
+          if (ok) {
+            |run();
+          }
+
+  - id: text-objects
+    title: Text objects
+    items:
+      - id: delete-inner-word
+        action: core.textobject.inner_word
+        prompt: Delete the word under the cursor, leaving the spaces around it
+        type: goal
+        keys: ["diw"]
+        start: "the qu|ick brown fox"
+        end: "the | brown fox"
+      - id: delete-a-word
+        action: core.textobject.a_word
+        prompt: Delete the word under the cursor and the space after it
+        type: goal
+        keys: ["daw"]
+        start: "the qu|ick brown fox"
+        end: "the |brown fox"
+      - id: change-inner-word
+        action: core.textobject.change_inner_word
+        prompt: Change the whole word under the cursor to total, then return to normal mode
+        type: goal
+        keys: ["ciwtotal<Esc>"]
+        start: "let co|unt = 0;"
+        end: "let tota|l = 0;"
+      - id: delete-inner-parens
+        action: core.textobject.inner_parens
+        prompt: Delete everything inside the parentheses
+        type: goal
+        keys: ["di(", "di)", "dib"]
+        start: "call(first, sec|ond)"
+        end: "call(|)"
+      - id: delete-a-parens
+        action: core.textobject.a_parens
+        prompt: Delete the inner parentheses and their contents
+        type: goal
+        keys: ["da(", "da)", "dab"]
+        start: "print(calc(a, |b), c)"
+        end: "print(calc|, c)"
+      - id: change-inner-quotes
+        action: core.textobject.change_inner_quotes
+        prompt: Change the text inside the quotes to new, then return to normal mode
+        type: goal
+        keys: ['ci"new<Esc>']
+        start: 'name = "old va|lue"'
+        end: 'name = "ne|w"'
+      - id: delete-a-quotes
+        action: core.textobject.a_quotes
+        prompt: Delete the string, including its quotes
+        type: goal
+        keys: ['da"']
+        start: 'say("hel|lo", name)'
+        end: 'say(|, name)'
+      - id: delete-inner-braces
+        action: core.textobject.inner_braces
+        prompt: Delete everything inside the braces
+        type: goal
+        keys: ["di{", "di}", "diB"]
+        start: "function run() {return |1;}"
+        end: "function run() {|}"
+      - id: delete-paragraph
+        action: core.textobject.a_paragraph
+        prompt: Delete this paragraph and the blank line after it
+        type: goal
+        keys: ["dap"]
+        start: |-
+          first line
+          sec|ond line
+
+          last paragraph
+        end: |-
+          |last paragraph
