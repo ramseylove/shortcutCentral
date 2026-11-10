@@ -1,0 +1,160 @@
+# Mappings checked against gitsigns.nvim main on 2026-11-10: README.md,
+# the `on_attach` example under "Keymaps". gitsigns sets no mappings itself,
+# so every item is `suggested`.
+id: gitsigns
+app: neovim
+name: gitsigns
+version: 1
+repo: lewis6991/gitsigns.nvim
+requires: [core]
+lessons:
+  - id: hunk-navigation
+    title: Moving between hunks
+    items:
+      - id: next-hunk
+        action: gitsigns.nav_hunk_next
+        prompt: Jump to the next changed hunk
+        type: keys
+        keys: ["]c"]
+        source: suggested
+        match: ["gitsigns.nav_hunk('next')", "Gitsigns nav_hunk next"]
+        surface: { mock: gitsigns-buffer, line: 3 }
+      - id: previous-hunk
+        action: gitsigns.nav_hunk_prev
+        prompt: Jump to the previous changed hunk
+        type: keys
+        keys: ["[c"]
+        source: suggested
+        match: ["gitsigns.nav_hunk('prev')", "Gitsigns nav_hunk prev"]
+        surface: { mock: gitsigns-buffer, line: 8 }
+
+  - id: hunk-actions
+    title: Staging, resetting and previewing
+    items:
+      - id: stage-hunk
+        action: gitsigns.stage_hunk
+        prompt: Stage the hunk under the cursor
+        type: keys
+        keys: ["<leader>hs"]
+        source: suggested
+        match: ["gitsigns.stage_hunk", "Gitsigns stage_hunk"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+      - id: reset-hunk
+        action: gitsigns.reset_hunk
+        prompt: Reset the hunk under the cursor to the committed version
+        type: keys
+        keys: ["<leader>hr"]
+        source: suggested
+        match: ["gitsigns.reset_hunk", "Gitsigns reset_hunk"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+      - id: stage-buffer
+        action: gitsigns.stage_buffer
+        prompt: Stage every hunk in the buffer
+        type: keys
+        keys: ["<leader>hS"]
+        source: suggested
+        match: ["gitsigns.stage_buffer", "Gitsigns stage_buffer"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+      - id: reset-buffer
+        action: gitsigns.reset_buffer
+        prompt: Reset every hunk in the buffer
+        type: keys
+        keys: ["<leader>hR"]
+        source: suggested
+        match: ["gitsigns.reset_buffer", "Gitsigns reset_buffer"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+      - id: preview-hunk
+        action: gitsigns.preview_hunk
+        prompt: Preview the hunk under the cursor in a floating window
+        type: keys
+        keys: ["<leader>hp"]
+        source: suggested
+        match: ["gitsigns.preview_hunk", "Gitsigns preview_hunk"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+      - id: preview-hunk-inline
+        action: gitsigns.preview_hunk_inline
+        prompt: Preview the hunk under the cursor inline in the buffer
+        type: keys
+        keys: ["<leader>hi"]
+        source: suggested
+        match: ["gitsigns.preview_hunk_inline", "Gitsigns preview_hunk_inline"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+
+  - id: blame-and-diff
+    title: Blame and diff
+    items:
+      - id: blame-line
+        action: gitsigns.blame_line
+        prompt: Show the full blame for the current line
+        type: keys
+        keys: ["<leader>hb"]
+        source: suggested
+        match: ["gitsigns.blame_line", "Gitsigns blame_line"]
+        surface: { mock: gitsigns-buffer, line: 4 }
+      - id: toggle-line-blame
+        action: gitsigns.toggle_current_line_blame
+        prompt: Toggle blame text at the end of the current line
+        type: keys
+        keys: ["<leader>tb"]
+        source: suggested
+        match: ["gitsigns.toggle_current_line_blame", "Gitsigns toggle_current_line_blame"]
+        surface: { mock: gitsigns-buffer, line: 4 }
+      - id: diff-index
+        action: gitsigns.diffthis
+        prompt: Diff the buffer against the index
+        type: keys
+        keys: ["<leader>hd"]
+        source: suggested
+        match: ["gitsigns.diffthis", "Gitsigns diffthis"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+      - id: diff-last-commit
+        action: gitsigns.diffthis_parent
+        prompt: Diff the buffer against the last commit
+        type: keys
+        keys: ["<leader>hD"]
+        source: suggested
+        match: ["gitsigns.diffthis('~')", "Gitsigns diffthis ~"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+      - id: toggle-word-diff
+        action: gitsigns.toggle_word_diff
+        prompt: Toggle word-level diff highlighting
+        type: keys
+        keys: ["<leader>tw"]
+        source: suggested
+        match: ["gitsigns.toggle_word_diff", "Gitsigns toggle_word_diff"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+      - id: hunks-to-quickfix
+        action: gitsigns.setqflist
+        prompt: List this buffer's hunks in the quickfix list
+        type: keys
+        keys: ["<leader>hq"]
+        source: suggested
+        match: ["gitsigns.setqflist", "Gitsigns setqflist"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+      - id: all-hunks-to-quickfix
+        action: gitsigns.setqflist_all
+        prompt: List the hunks of every file in the quickfix list
+        type: keys
+        keys: ["<leader>hQ"]
+        source: suggested
+        match: ["gitsigns.setqflist('all')", "Gitsigns setqflist all"]
+        surface: { mock: gitsigns-buffer, line: 1 }
+
+  - id: hunk-text-object
+    title: The hunk text object
+    items:
+      - id: select-hunk
+        action: gitsigns.select_hunk
+        prompt: Visually select the hunk under the cursor
+        type: keys
+        keys: ["vih"]
+        source: suggested
+        match: ["gitsigns.select_hunk", "Gitsigns select_hunk"]
+        surface: { mock: gitsigns-buffer, line: 5 }
+      - id: delete-hunk
+        action: gitsigns.select_hunk.delete
+        prompt: Delete the lines of the hunk under the cursor
+        type: keys
+        keys: ["dih"]
+        source: suggested
+        surface: { mock: gitsigns-buffer, line: 5 }

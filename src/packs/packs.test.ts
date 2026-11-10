@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { goalEnd, goalStart, keyBudget } from '../drills/goalCheck';
 import { createVimView, feedKeys, formatMarkedBuffer, readBufferState } from '../surfaces/vimBuffer';
+import { filterFiles } from '../drills/fzfMatch';
 import { acceptedSequences, allPacks } from './registry';
 import { validatePacks } from './schema';
 
@@ -79,12 +80,35 @@ describe('goal items reach their end state', () => {
               const expected = goalEnd(item);
               expect(formatMarkedBuffer(actual)).toBe(formatMarkedBuffer(expected));
               expect(actual.mode).toBe(expected.mode);
-              expect(sequence.length).toBeLessThanOrEqual(keyBudget(item, sequences));
+              expect(sequence.length).toBeLessThanOrEqual(
+                keyBudget(item.maxKeys, sequences.map((keys) => keys.length)),
+              );
             } finally {
               view.destroy();
               parent.remove();
             }
           });
+        });
+      }
+    }
+  }
+});
+
+// Every accepted query of every query item must leave exactly the targets.
+describe('query items narrow the list to their targets', () => {
+  for (const pack of allPacks) {
+    for (const lesson of pack.lessons) {
+      for (const item of lesson.items) {
+        if (item.type !== 'query') continue;
+        for (const query of item.keys) {
+          it(`${pack.app}/${pack.id}/${item.id}: ${query}`, () => {
+            expect(filterFiles(item.files, query).sort()).toEqual([...item.targets].sort());
+          });
+        }
+        it(`${pack.app}/${pack.id}/${item.id}: needs its operators`, () => {
+          // Dropping the operators must give a different list, or the item teaches nothing.
+          const plain = item.keys[0].replace(/['^$!]/g, '');
+          expect(filterFiles(item.files, plain).sort()).not.toEqual([...item.targets].sort());
         });
       }
     }

@@ -3,6 +3,7 @@ import { DEFAULT_APP_ID } from './apps';
 import { CurriculumScreen } from './screens/CurriculumScreen';
 import { KeyTestScreen } from './screens/KeyTestScreen';
 import { LessonScreen } from './screens/LessonScreen';
+import { PluginsScreen } from './screens/PluginsScreen';
 import { ReferenceScreen } from './screens/ReferenceScreen';
 import { ReviewScreen } from './screens/ReviewScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
@@ -16,6 +17,7 @@ function Shell() {
         <div className="brand">Shortcut Central</div>
         <NavLink to={`/${app}/today`}>Today</NavLink>
         <NavLink to={`/${app}/curriculum`}>Curriculum</NavLink>
+        <NavLink to={`/${app}/plugins`}>Plugins</NavLink>
         <NavLink to={`/${app}/reference`}>Reference</NavLink>
         <NavLink to="/settings">Settings</NavLink>
         <NavLink to="/key-test">Key test</NavLink>
@@ -34,6 +36,7 @@ export function App() {
         <Route element={<Shell />}>
           <Route path="/:appId/today" element={<TodayScreen />} />
           <Route path="/:appId/curriculum" element={<CurriculumScreen />} />
+          <Route path="/:appId/plugins" element={<PluginsScreen />} />
           <Route path="/:appId/reference" element={<ReferenceScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
           <Route path="/key-test" element={<KeyTestScreen />} />

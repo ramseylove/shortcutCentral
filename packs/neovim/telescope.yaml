@@ -1,0 +1,180 @@
+# Mappings checked against telescope.nvim master on 2026-11-10:
+#   openers   - README.md, "Usage" (suggested mappings, not set by the plugin)
+#   in-picker - lua/telescope/mappings.lua, `mappings.default_mappings`
+id: telescope
+app: neovim
+name: Telescope
+version: 1
+repo: nvim-telescope/telescope.nvim
+requires: [core]
+lessons:
+  - id: open-pickers
+    title: Opening pickers
+    items:
+      - id: find-files
+        action: telescope.find_files
+        prompt: Open the file finder
+        type: keys
+        keys: ["<leader>ff"]
+        source: suggested
+        match: ["Telescope find_files", "telescope.builtin.find_files"]
+        surface: { mock: editor }
+      - id: live-grep
+        action: telescope.live_grep
+        prompt: Search for text across the project
+        type: keys
+        keys: ["<leader>fg"]
+        source: suggested
+        match: ["Telescope live_grep", "telescope.builtin.live_grep"]
+        surface: { mock: editor }
+      - id: buffers
+        action: telescope.buffers
+        prompt: List the open buffers
+        type: keys
+        keys: ["<leader>fb"]
+        source: suggested
+        match: ["Telescope buffers", "telescope.builtin.buffers"]
+        surface: { mock: editor }
+      - id: help-tags
+        action: telescope.help_tags
+        prompt: Search the help tags
+        type: keys
+        keys: ["<leader>fh"]
+        source: suggested
+        match: ["Telescope help_tags", "telescope.builtin.help_tags"]
+        surface: { mock: editor }
+
+  - id: in-picker
+    title: Moving inside a picker
+    items:
+      - id: next-insert
+        action: telescope.move_selection_next
+        prompt: "Picker, insert mode: move to the next result"
+        type: keys
+        keys: ["<C-n>", "<Down>"]
+        surface: { mock: telescope-picker, selected: "src/main.ts" }
+      - id: previous-insert
+        action: telescope.move_selection_previous
+        prompt: "Picker, insert mode: move to the previous result"
+        type: keys
+        keys: ["<C-p>", "<Up>"]
+        surface: { mock: telescope-picker, selected: "src/main.ts" }
+      - id: close-insert
+        action: telescope.close
+        prompt: "Picker, insert mode: close the picker"
+        type: keys
+        keys: ["<C-c>"]
+        surface: { mock: telescope-picker }
+      - id: next-normal
+        action: telescope.move_selection_next.normal
+        prompt: "Picker, normal mode: move to the next result"
+        type: keys
+        keys: ["j", "<Down>"]
+        surface: { mock: telescope-picker, mode: normal, selected: "src/main.ts" }
+      - id: previous-normal
+        action: telescope.move_selection_previous.normal
+        prompt: "Picker, normal mode: move to the previous result"
+        type: keys
+        keys: ["k", "<Up>"]
+        surface: { mock: telescope-picker, mode: normal, selected: "src/main.ts" }
+      - id: top-normal
+        action: telescope.move_to_top
+        prompt: "Picker, normal mode: jump to the top of the results"
+        type: keys
+        keys: ["gg", "H"]
+        surface: { mock: telescope-picker, mode: normal, selected: "src/hooks/useAuth.ts" }
+      - id: bottom-normal
+        action: telescope.move_to_bottom
+        prompt: "Picker, normal mode: jump to the bottom of the results"
+        type: keys
+        keys: ["G", "L"]
+        surface: { mock: telescope-picker, mode: normal, selected: "src/main.ts" }
+      - id: close-normal
+        action: telescope.close.normal
+        prompt: "Picker, normal mode: close the picker"
+        type: keys
+        keys: ["<Esc>"]
+        surface: { mock: telescope-picker, mode: normal }
+      - id: preview-down
+        action: telescope.preview_scrolling_down
+        prompt: Scroll the picker's preview down
+        type: keys
+        keys: ["<C-d>"]
+        surface: { mock: telescope-picker }
+      - id: preview-up
+        action: telescope.preview_scrolling_up
+        prompt: Scroll the picker's preview up
+        type: keys
+        keys: ["<C-u>"]
+        surface: { mock: telescope-picker }
+      - id: which-key-insert
+        action: telescope.which_key
+        prompt: "Picker, insert mode: show the picker's key mappings"
+        type: keys
+        keys: ["<C-/>"]
+        surface: { mock: telescope-picker }
+      - id: which-key-normal
+        action: telescope.which_key.normal
+        prompt: "Picker, normal mode: show the picker's key mappings"
+        type: keys
+        keys: ["?"]
+        surface: { mock: telescope-picker, mode: normal }
+
+  - id: open-results
+    title: Opening results
+    items:
+      - id: open-default
+        action: telescope.select_default
+        prompt: Open the selected file in the current window
+        type: keys
+        keys: ["<CR>"]
+        surface: { mock: telescope-picker, selected: "src/app.tsx" }
+      - id: open-split
+        action: telescope.select_horizontal
+        prompt: Open the selected file in a horizontal split
+        type: keys
+        keys: ["<C-x>"]
+        surface: { mock: telescope-picker, selected: "src/app.tsx" }
+      - id: open-vsplit
+        action: telescope.select_vertical
+        prompt: Open the selected file in a vertical split
+        type: keys
+        keys: ["<C-v>"]
+        surface: { mock: telescope-picker, selected: "src/app.tsx" }
+      - id: open-tab
+        action: telescope.select_tab
+        prompt: Open the selected file in a new tab
+        type: keys
+        keys: ["<C-t>"]
+        surface: { mock: telescope-picker, selected: "src/app.tsx" }
+
+  - id: quickfix
+    title: Selecting results and the quickfix list
+    items:
+      - id: toggle-selection-down
+        action: telescope.toggle_selection_worse
+        prompt: Mark the selected result and move down
+        type: keys
+        keys: ["<Tab>"]
+        surface: { mock: telescope-picker, selected: "src/main.ts" }
+      - id: toggle-selection-up
+        action: telescope.toggle_selection_better
+        prompt: Mark the selected result and move up
+        type: keys
+        keys: ["<S-Tab>"]
+        surface: { mock: telescope-picker, selected: "src/main.ts" }
+      - id: send-all-to-quickfix
+        action: telescope.send_to_qflist
+        prompt: Send every result to the quickfix list
+        type: keys
+        keys: ["<C-q>"]
+        surface: { mock: telescope-picker }
+      - id: send-selected-to-quickfix
+        action: telescope.send_selected_to_qflist
+        prompt: Send only the marked results to the quickfix list
+        type: keys
+        keys: ["<M-q>"]
+        surface:
+          mock: telescope-picker
+          selected: "src/components/Modal.tsx"
+          marked: ["src/app.tsx", "src/main.ts"]

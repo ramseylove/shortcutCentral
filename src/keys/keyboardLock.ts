@@ -2,13 +2,14 @@ import type { KeyToken } from './notation';
 
 /**
  * Chords a normal browser tab acts on itself (close tab, new window, new tab,
- * switch tab) and never delivers to the page. Fullscreen with the Keyboard Lock
+ * switch tab, and in Firefox quit) and never delivers to the page. Fullscreen with the Keyboard Lock
  * API delivers them, in Chromium-based browsers only.
  */
 export const RESERVED_CHORDS: KeyToken[] = [
   '<C-w>',
   '<C-n>',
   '<C-t>',
+  '<C-q>',
   '<C-S-w>',
   '<C-S-n>',
   '<C-S-t>',

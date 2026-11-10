@@ -87,10 +87,10 @@ export async function importData(file: ExportFile, database: ShortcutCentralDb =
         database.lessons.clear(),
         database.settings.clear(),
       ]);
-      await database.cards.bulkAdd(file.cards);
-      await database.attempts.bulkAdd(file.attempts);
-      await database.lessons.bulkAdd(file.lessons);
-      await database.settings.bulkAdd(file.settings.map(({ name, value }) => ({ name, value })));
+      await database.cards.bulkPut(file.cards);
+      await database.attempts.bulkPut(file.attempts);
+      await database.lessons.bulkPut(file.lessons);
+      await database.settings.bulkPut(file.settings.map(({ name, value }) => ({ name, value })));
     },
   );
 }

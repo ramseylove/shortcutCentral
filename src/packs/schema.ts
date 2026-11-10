@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { parseKeys } from '../keys/notation';
+import { parseKeys } from '../keys/notation.ts';
 
 /** Mock surfaces that exist as React components. Pack items may only name these. */
-export const MOCK_NAMES = ['editor'] as const;
+export const MOCK_NAMES = ['editor', 'telescope-picker', 'gitsigns-buffer'] as const;
 
 /** Marks the cursor position in a goal item's `start` and `end` buffers. */
 export const CURSOR_MARK = '|';
@@ -49,7 +49,22 @@ const goalItem = z.object({
   maxKeys: z.number().int().positive().optional(),
 });
 
-export const itemSchema = z.discriminatedUnion('type', [keysItem, goalItem]);
+const queryItem = z
+  .object({
+    ...itemBase,
+    type: z.literal('query'),
+    /** For a query item, `keys` holds accepted query strings, not key sequences. */
+    files: z.array(z.string().min(1)).min(2),
+    /** The entries the query must narrow the list to. */
+    targets: z.array(z.string().min(1)).min(1),
+    maxKeys: z.number().int().positive().optional(),
+  })
+  .refine((item) => item.targets.every((target) => item.files.includes(target)), {
+    message: 'every target must be one of the files',
+    path: ['targets'],
+  });
+
+export const itemSchema = z.discriminatedUnion('type', [keysItem, goalItem, queryItem]);
 
 const lessonSchema = z.object({
   id: slug,
@@ -96,6 +111,7 @@ export type Lesson = Pack['lessons'][number];
 export type PackItem = z.infer<typeof itemSchema>;
 export type KeysItem = z.infer<typeof keysItem>;
 export type GoalItem = z.infer<typeof goalItem>;
+export type QueryItem = z.infer<typeof queryItem>;
 
 /**
  * Validates a set of pack files together: each against the schema, then the

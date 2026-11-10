@@ -1,0 +1,111 @@
+# Syntax checked against telescope-fzf-native.nvim main on 2026-11-10: README.md,
+# the table of search operators. This pack teaches query syntax, not mappings.
+id: telescope-fzf-native
+app: neovim
+name: telescope-fzf-native
+version: 1
+repo: nvim-telescope/telescope-fzf-native.nvim
+requires: [telescope]
+lessons:
+  - id: search-syntax
+    title: Search syntax
+    items:
+      - id: exact
+        action: fzf.exact
+        prompt: Keep only the paths that contain exactly "test"
+        type: query
+        keys: ["'test"]
+        files: &files
+          - src/app.tsx
+          - src/app.test.tsx
+          - src/main.ts
+          - src/components/Button.tsx
+          - src/components/Button.test.tsx
+          - src/components/Modal.tsx
+          - src/hooks/useAuth.ts
+          - src/utils/dates.ts
+          - src/tests/fixtures.ts
+          - src/styles/app.css
+          - tests/app.spec.ts
+          - tests/setup.ts
+          - docs/testing.md
+          - README.md
+          - package.json
+        targets:
+          - src/app.test.tsx
+          - src/components/Button.test.tsx
+          - src/tests/fixtures.ts
+          - tests/app.spec.ts
+          - tests/setup.ts
+          - docs/testing.md
+      - id: prefix
+        action: fzf.prefix
+        prompt: Keep only the paths that start with "tests"
+        type: query
+        keys: ["^tests"]
+        files: *files
+        targets:
+          - tests/app.spec.ts
+          - tests/setup.ts
+      - id: suffix
+        action: fzf.suffix
+        prompt: Keep only the paths that end in ".ts"
+        type: query
+        keys: [".ts$"]
+        files: *files
+        targets:
+          - src/main.ts
+          - src/hooks/useAuth.ts
+          - src/utils/dates.ts
+          - src/tests/fixtures.ts
+          - tests/app.spec.ts
+          - tests/setup.ts
+      - id: negate
+        action: fzf.inverse
+        prompt: Remove every path that contains "test"
+        type: query
+        keys: ["!test"]
+        files: *files
+        targets:
+          - src/app.tsx
+          - src/main.ts
+          - src/components/Button.tsx
+          - src/components/Modal.tsx
+          - src/hooks/useAuth.ts
+          - src/utils/dates.ts
+          - src/styles/app.css
+          - README.md
+          - package.json
+      - id: negate-prefix
+        action: fzf.inverse_prefix
+        prompt: Remove every path that starts with "src"
+        type: query
+        keys: ["!^src"]
+        files: *files
+        targets:
+          - tests/app.spec.ts
+          - tests/setup.ts
+          - docs/testing.md
+          - README.md
+          - package.json
+      - id: combine-two
+        action: fzf.combine
+        prompt: Keep only the paths that start with "src" and end in ".ts"
+        type: query
+        keys: ["^src .ts$", ".ts$ ^src"]
+        files: *files
+        targets:
+          - src/main.ts
+          - src/hooks/useAuth.ts
+          - src/utils/dates.ts
+          - src/tests/fixtures.ts
+      - id: combine-three
+        action: fzf.combine_negate
+        prompt: Keep the paths that start with "src" and end in ".tsx", but not those containing "test"
+        type: query
+        keys: ["^src .tsx$ !test"]
+        files: *files
+        targets:
+          - src/app.tsx
+          - src/components/Button.tsx
+          - src/components/Modal.tsx

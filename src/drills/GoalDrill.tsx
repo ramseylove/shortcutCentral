@@ -18,7 +18,10 @@ import type { DrillProps } from './types';
 export function GoalDrill({ appId, item, frozen, onResult }: DrillProps<GoalItem>) {
   const start = useMemo(() => goalStart(item), [item]);
   const end = useMemo(() => goalEnd(item), [item]);
-  const budget = useMemo(() => keyBudget(item, acceptedSequences(appId, item)), [appId, item]);
+  const budget = useMemo(
+    () => keyBudget(item.maxKeys, acceptedSequences(appId, item).map((keys) => keys.length)),
+    [appId, item],
+  );
 
   const view = useRef<EditorView | null>(null);
   const keys = useRef<KeyToken[]>([]);

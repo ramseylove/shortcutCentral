@@ -4,7 +4,9 @@ import { parse } from 'yaml';
 import { parseKeys } from '../src/keys/notation';
 import type { Pack } from '../src/packs/schema';
 
-export const core = parse(fs.readFileSync('packs/neovim/core.yaml', 'utf8')) as Pack;
+const loadPack = (id: string) => parse(fs.readFileSync(`packs/neovim/${id}.yaml`, 'utf8')) as Pack;
+export const core = loadPack('core');
+export const packs = [core, loadPack('telescope'), loadPack('telescope-fzf-native'), loadPack('gitsigns')];
 
 const NAMED: Record<string, string> = {
   Esc: 'Escape',
@@ -32,15 +34,18 @@ export async function typeKeys(page: Page, keys: string): Promise<void> {
   for (const token of parseKeys(keys.replace('<leader>', '<Space>'))) await pressToken(page, token);
 }
 
-/** Marks lessons complete by importing an export file through the Settings screen. */
-export async function seedCompleted(page: Page, lessonIds: string[]): Promise<void> {
+/**
+ * Seeds progress by importing an export file through the Settings screen.
+ * `lessons` are `pack/lesson` ids to mark complete; `enabled` are plugin packs to turn on.
+ */
+export async function seedProgress(page: Page, lessons: string[], enabled: string[] = []): Promise<void> {
   const file = {
     schemaVersion: 1,
     exportedAt: 1,
     cards: [],
     attempts: [],
-    lessons: lessonIds.map((id) => ({ key: `neovim/core/${id}`, status: 'completed', completedAt: 1 })),
-    settings: [],
+    lessons: lessons.map((id) => ({ key: `neovim/${id}`, status: 'completed', completedAt: 1 })),
+    settings: [{ name: 'neovim/enabledPacks', value: enabled }],
   };
   await page.goto('/#/settings');
   page.once('dialog', (dialog) => void dialog.accept());
@@ -52,7 +57,7 @@ export async function seedCompleted(page: Page, lessonIds: string[]): Promise<vo
   await expect(page.getByTestId('settings-message')).toContainText('Imported');
 }
 
-const allItems = core.lessons.flatMap((lesson) => lesson.items);
+const allItems = packs.flatMap((pack) => pack.lessons.flatMap((lesson) => lesson.items));
 
 /**
  * Answers every presentation of the running lesson or review with the item's
@@ -81,7 +86,7 @@ export async function answerUntilSummary(page: Page): Promise<number> {
   return presentations;
 }
 
-export async function completeLesson(page: Page, lessonId: string): Promise<number> {
-  await page.goto(`/#/neovim/lesson/core/${lessonId}`);
+export async function completeLesson(page: Page, lessonId: string, packId = 'core'): Promise<number> {
+  await page.goto(`/#/neovim/lesson/${packId}/${lessonId}`);
   return answerUntilSummary(page);
 }

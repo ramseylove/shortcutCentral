@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import type { Plugin } from 'vite';
-import { validatePacks } from '../src/packs/schema';
+import { validatePacks } from '../src/packs/schema.ts';
 
 const VIRTUAL_ID = 'virtual:packs';
 const RESOLVED_ID = '\0' + VIRTUAL_ID;

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { completeLesson, core, seedCompleted, typeKeys } from './helpers';
+import { completeLesson, core, seedProgress, typeKeys } from './helpers';
 
 test('key test page shows captured keys in Neovim notation', async ({ page }) => {
   await page.goto('/#/key-test');
@@ -57,7 +57,7 @@ test('a wrong key fails the drill, shows the answer and repeats the item', async
 });
 
 test('goal drills accept another route but not brute force', async ({ page }) => {
-  await seedCompleted(page, ['basics']);
+  await seedProgress(page, ['core/basics']);
   await page.goto('/#/neovim/lesson/core/motions');
   const feedback = page.getByTestId('feedback');
 
@@ -76,7 +76,7 @@ test('goal drills accept another route but not brute force', async ({ page }) =>
 for (const lessonId of ['motions', 'operators', 'text-objects']) {
   test(`every item in "${lessonId}" passes with its canonical keys in a real browser`, async ({ page }) => {
     const index = core.lessons.findIndex((l) => l.id === lessonId);
-    await seedCompleted(page, core.lessons.slice(0, index).map((l) => l.id));
+    await seedProgress(page, core.lessons.slice(0, index).map((l) => `core/${l.id}`));
     const count = core.lessons[index].items.length;
     expect(await completeLesson(page, lessonId)).toBe(count * 3);
     await expect(page.getByTestId('lesson-summary')).toContainText('100%');
