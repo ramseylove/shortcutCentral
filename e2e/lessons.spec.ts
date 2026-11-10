@@ -16,22 +16,28 @@ test('key test page shows captured keys in Neovim notation', async ({ page }) =>
 });
 
 test('a key-match lesson can be completed from the pack file', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByTestId('lesson-basics')).toHaveClass(/available/);
-  await expect(page.getByTestId('lesson-motions')).toHaveClass(/locked/);
+  await page.goto('/#/neovim/curriculum');
+  await expect(page.getByTestId('lesson-core-basics')).toHaveClass(/available/);
+  await expect(page.getByTestId('lesson-core-motions')).toHaveClass(/locked/);
 
   const count = core.lessons[0].items.length;
   // Each item once in the intro, then twice in a row in the drill.
   expect(await completeLesson(page, 'basics')).toBe(count * 3);
   await expect(page.getByTestId('lesson-summary')).toContainText('100%');
 
-  await page.getByRole('button', { name: 'Back to curriculum' }).click();
-  await expect(page.getByTestId('lesson-basics')).toHaveClass(/completed/);
-  await expect(page.getByTestId('lesson-motions')).toHaveClass(/available/);
+  await page.goto('/#/neovim/curriculum');
+  await expect(page.getByTestId('lesson-core-basics')).toHaveClass(/completed/);
+  await expect(page.getByTestId('lesson-core-motions')).toHaveClass(/available/);
 
   // Progress survives a reload.
   await page.reload();
-  await expect(page.getByTestId('lesson-basics')).toHaveClass(/completed/);
+  await expect(page.getByTestId('lesson-core-basics')).toHaveClass(/completed/);
+
+  // The lesson's drills show up as accuracy in the reference.
+  await page.goto('/#/neovim/reference');
+  await page.getByRole('searchbox').fill('Save the file');
+  await expect(page.getByTestId('reference').locator('tbody tr')).toHaveCount(2);
+  await expect(page.getByTestId('reference').locator('tbody tr').first()).toContainText('100% (2/2)');
 });
 
 test('a wrong key fails the drill, shows the answer and repeats the item', async ({ page }) => {

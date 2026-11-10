@@ -1,22 +1,20 @@
-import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getApp } from '../apps';
 import { lessonStatus } from '../curriculum/unlock';
 import { enterImmersive } from '../keys/keyboardLock';
-import { lessonKey, packsForApp } from '../packs/registry';
-import { useProgress } from '../store/progress';
+import { useEnabledPacks } from '../packs/enabled';
+import { useCompletedLessons } from '../store/progress';
 
 const STATUS_LABEL = { locked: 'Locked', available: 'Start', completed: 'Done' } as const;
 
 export function CurriculumScreen() {
   const { appId = '' } = useParams();
   const app = getApp(appId);
-  const packs = useMemo(() => packsForApp(appId), [appId]);
-  const completedLessons = useProgress((state) => state.completedLessons);
-  const reset = useProgress((state) => state.reset);
-  const completed = useMemo(() => new Set(Object.keys(completedLessons)), [completedLessons]);
+  const packs = useEnabledPacks(appId);
+  const completed = useCompletedLessons();
 
   if (!app) return <p>Unknown app “{appId}”.</p>;
+  if (!packs || !completed) return null;
 
   return (
     <div className="screen">
@@ -35,7 +33,7 @@ export function CurriculumScreen() {
                 </>
               );
               return (
-                <li key={lesson.id} className={`lesson ${status}`} data-testid={`lesson-${lesson.id}`}>
+                <li key={lesson.id} className={`lesson ${status}`} data-testid={`lesson-${pack.id}-${lesson.id}`}>
                   {status === 'locked' ? (
                     <div className="lesson-row">{row}</div>
                   ) : (
@@ -48,24 +46,12 @@ export function CurriculumScreen() {
                       {row}
                     </Link>
                   )}
-                  <span hidden>{lessonKey(pack, lesson)}</span>
                 </li>
               );
             })}
           </ol>
         </section>
       ))}
-      {completed.size > 0 && (
-        <button
-          type="button"
-          className="link-button"
-          onClick={() => {
-            if (window.confirm('Clear all lesson progress?')) reset();
-          }}
-        >
-          Reset progress
-        </button>
-      )}
     </div>
   );
 }

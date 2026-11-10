@@ -223,3 +223,53 @@ a.lesson-row:hover { border-color: var(--accent); }
 .key-log { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
 .key-log th { text-align: left; color: var(--muted); font-weight: 500; }
 .key-log th, .key-log td { padding: 0.3rem 0.75rem 0.3rem 0; border-bottom: 1px solid var(--border); font-family: var(--mono); }
+
+/* Today */
+.screen.wide { max-width: 1000px; }
+.today-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 0 0 1.25rem; }
+.today-stats div { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; }
+.today-stats dt { color: var(--muted); font-size: 0.8rem; }
+.today-stats dd { margin: 0; font-size: 1.6rem; font-weight: 600; }
+.today-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.today-card.primary { border-color: var(--accent); }
+.today-card h2 { margin: 0 0 0.15rem; }
+.today-card p { margin: 0; }
+
+/* Reference */
+.search, .field input {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+.search { width: 100%; max-width: 420px; margin-bottom: 1rem; }
+.search:focus, .field input:focus { outline: none; border-color: var(--accent); }
+.reference { border-collapse: collapse; width: 100%; font-size: 0.925rem; }
+.reference th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+.reference th, .reference td { padding: 0.45rem 1rem 0.45rem 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.reference .num { text-align: right; padding-right: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.reference td:first-child { white-space: nowrap; }
+.source { font-size: 0.75rem; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.source.suggested { border-color: var(--warn); color: var(--warn); }
+.source.config { border-color: var(--accent); color: var(--accent); }
+
+/* Settings */
+.field { display: flex; align-items: center; gap: 1rem; }
+.field input { width: 6rem; }
+.button-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.button.danger { color: var(--bad); }
+.notice { margin-top: 1rem; }
+.notice.ok { color: var(--ok); }
+.notice.bad { color: var(--bad); }

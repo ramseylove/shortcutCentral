@@ -32,18 +32,33 @@ export async function typeKeys(page: Page, keys: string): Promise<void> {
   for (const token of parseKeys(keys.replace('<leader>', '<Space>'))) await pressToken(page, token);
 }
 
-/** Marks earlier lessons complete so a later lesson can be opened directly. */
+/** Marks lessons complete by importing an export file through the Settings screen. */
 export async function seedCompleted(page: Page, lessonIds: string[]): Promise<void> {
-  const completedLessons = Object.fromEntries(lessonIds.map((id) => [`neovim/core/${id}`, 1]));
-  await page.addInitScript((value) => {
-    localStorage.setItem('shortcut-central-progress', value);
-  }, JSON.stringify({ state: { completedLessons }, version: 1 }));
+  const file = {
+    schemaVersion: 1,
+    exportedAt: 1,
+    cards: [],
+    attempts: [],
+    lessons: lessonIds.map((id) => ({ key: `neovim/core/${id}`, status: 'completed', completedAt: 1 })),
+    settings: [],
+  };
+  await page.goto('/#/settings');
+  page.once('dialog', (dialog) => void dialog.accept());
+  await page.getByTestId('import-file').setInputFiles({
+    name: 'seed.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(file)),
+  });
+  await expect(page.getByTestId('settings-message')).toContainText('Imported');
 }
 
-/** Runs a whole lesson, answering every presentation with the canonical keys. */
-export async function completeLesson(page: Page, lessonId: string): Promise<number> {
-  const lesson = core.lessons.find((l) => l.id === lessonId)!;
-  await page.goto(`/#/neovim/lesson/core/${lessonId}`);
+const allItems = core.lessons.flatMap((lesson) => lesson.items);
+
+/**
+ * Answers every presentation of the running lesson or review with the item's
+ * canonical keys, until the summary appears. Returns the number answered.
+ */
+export async function answerUntilSummary(page: Page): Promise<number> {
   const body = page.getByTestId('lesson-body');
   const summary = page.getByTestId('lesson-summary');
   let presentations = 0;
@@ -53,7 +68,7 @@ export async function completeLesson(page: Page, lessonId: string): Promise<numb
     if (await summary.isVisible()) break;
     const attempt = await body.getAttribute('data-attempt');
     const prompt = await page.getByTestId('prompt').innerText();
-    const item = lesson.items.find((i) => i.prompt === prompt);
+    const item = allItems.find((i) => i.prompt === prompt);
     if (!item) throw new Error(`no item with prompt "${prompt}"`);
     await typeKeys(page, item.keys[0]);
     await expect(page.getByTestId('feedback')).toHaveText('Correct');
@@ -64,4 +79,9 @@ export async function completeLesson(page: Page, lessonId: string): Promise<numb
       .toBe(true);
   }
   return presentations;
+}
+
+export async function completeLesson(page: Page, lessonId: string): Promise<number> {
+  await page.goto(`/#/neovim/lesson/core/${lessonId}`);
+  return answerUntilSummary(page);
 }

@@ -1,5 +1,5 @@
 import { EditorView } from '@codemirror/view';
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { createVimView } from './vimBuffer';
 
 const theme = EditorView.theme(
@@ -33,7 +33,7 @@ export function MiniBuffer({
   const ready = useRef(onReady);
   ready.current = onReady;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!host.current) return undefined;
     const view = createVimView(host.current, start, [theme]);
     view.focus();

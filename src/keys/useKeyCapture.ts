@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { normalizeKeyEvent, type KeyToken } from './notation';
 
 interface KeyCaptureOptions {
@@ -25,7 +25,8 @@ export function useKeyCapture(
   const handler = useRef(onKey);
   handler.current = onKey;
 
-  useEffect(() => {
+  // A layout effect, so the listener is in place as soon as the screen is visible.
+  useLayoutEffect(() => {
     if (!enabled) return undefined;
     const listener = (event: KeyboardEvent) => {
       if (event.isComposing) return;
