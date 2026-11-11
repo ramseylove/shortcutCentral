@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { exportData, importData, parseExport } from '../store/backup';
+import { loadStoredConfigs } from '../store/config';
 import { resetProgress } from '../store/progress';
 import { DEFAULT_SESSION_CAP, setSetting, settingNames, useSetting } from '../store/settings';
 
@@ -29,6 +30,7 @@ export function SettingsScreen() {
       const summary = `${data.lessons.length} lessons, ${data.cards.length} cards and ${data.attempts.length} attempts`;
       if (!window.confirm(`Replace all progress on this device with the file's ${summary}?`)) return;
       await importData(data);
+      await loadStoredConfigs();
       setMessage({ tone: 'ok', text: `Imported ${summary}.` });
     } catch (error) {
       setMessage({ tone: 'bad', text: error instanceof Error ? error.message : String(error) });
@@ -58,7 +60,7 @@ export function SettingsScreen() {
 
       <h2>Your data</h2>
       <p className="lede">
-        Progress is stored in this browser only. Export it to keep a backup or move to another
+        Progress and your config are stored in this browser only. Export it to keep a backup or move to another
         device. Importing replaces everything stored here.
       </p>
       <div className="button-row">

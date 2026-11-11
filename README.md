@@ -26,8 +26,10 @@ npm run build      # typecheck, validate packs, build to dist/
 | `src/surfaces` | Mini buffer (CodeMirror Vim mode) and the static mocks |
 | `src/curriculum` | Lesson session state machine and unlock rules |
 | `src/srs` | FSRS wrapper, rating derivation, review queue and session |
-| `src/store` | IndexedDB tables (Dexie), settings, export and import |
-| `src/screens` | Today, Curriculum, Plugins, Reference, Settings, Key test, and the lesson and review runners |
+| `src/config` | Runs an `init.lua` in a Lua VM (wasmoon, in a Web Worker) against a stubbed `vim`, and applies the override rules |
+| `src/store` | IndexedDB tables (Dexie), settings, the stored config, export and import |
+| `scripts/pack-draft.ts` | Drafts a pack from a plugin's documentation with the Claude API |
+| `src/screens` | Today, Curriculum, Plugins, Reference, Config, Settings, Key test, and the lesson and review runners |
 
 ## Pack format
 
@@ -49,9 +51,43 @@ engine, and every query item against the matcher, so a pack cannot ship an
 answer the app would reject. Each plugin pack starts with a comment naming the
 documentation its mappings were checked against, and when.
 
+## Config
+
+The Config screen takes one `init.lua`, runs it in the browser and records the
+leader keys, lazy.nvim plugin specs and key mappings. `src/config/prelude.lua`
+is the stub; it is written in Lua and returns the recording as JSON.
+
+- Packs for plugins in the config are turned on. Plugins with no pack are
+  listed on the Plugins screen with the `pack:draft` command.
+- A mapping whose right-hand side is in a pack item's `match` list replaces
+  that item's keys. Function mappings are called once in a recording mode to
+  see which plugin functions they use.
+- Any other mapping with a `desc` becomes an item in the generated My config
+  pack (lessons of eight). The rest are listed as warnings.
+- `lazy` spec `config`, `init` and `opts` functions, `on_attach` callbacks and
+  autocommand callbacks are called, since mappings are often defined there.
+- With a config applied and no `mapleader` set, the leader is `\`, as in Neovim.
+- The config has no file, process or network access and is stopped after two
+  seconds. What it recorded up to an error or the time limit is kept.
+
+## Drafting a pack
+
+```bash
+npm run pack:draft -- nvim-neo-tree/neo-tree.nvim
+```
+
+Needs `ANTHROPIC_API_KEY`. The script fetches the README and `doc/*.txt`,
+asks Claude for a pack with a citation per item, validates it against the
+schema (one retry with the errors), checks each cited quote against the
+documentation, and writes `packs/drafts/<id>.yaml`. Citations that cannot be
+found are marked `UNVERIFIED`. `--dry-run` prints the prompt without calling
+the API. A draft is never loaded; review it, give each item a mock surface and
+move it to `packs/<app>/`.
+
 ## Stored data
 
 IndexedDB database `shortcut-central`, four tables: `cards` (FSRS state, due
-date, suspended flag), `attempts`, `lessons` and `settings`. Settings →
+date, suspended flag), `attempts`, `lessons` and `settings` (which holds the
+config text and its recording). Settings →
 Export writes them as one JSON document with a schema version; Import replaces
 all four.

@@ -317,3 +317,50 @@ a.lesson-row:hover { border-color: var(--accent); }
 .plugin-note { color: var(--warn); font-size: 0.85rem; }
 .toggle { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap; }
 .toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
+
+/* Config screen */
+.config-editor {
+  display: block;
+  width: 100%;
+  min-height: 22rem;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--panel, #11161d);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  tab-size: 2;
+  white-space: pre;
+  resize: vertical;
+}
+.config-editor:focus { outline: none; border-color: var(--accent); }
+.config-results h3 { font-size: 0.95rem; margin: 1.5rem 0 0.5rem; }
+.config-facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1.25rem; margin: 0; }
+.config-facts dt { color: var(--muted); }
+.config-facts dd { margin: 0; }
+.config-table { border-collapse: collapse; width: 100%; }
+.config-table td { padding: 0.45rem 0.75rem 0.45rem 0; border-top: 1px solid var(--border); vertical-align: top; }
+.config-table .was { opacity: 0.55; }
+.config-warnings { margin: 0; padding-left: 1.1rem; }
+.config-warnings li { margin-bottom: 0.4rem; }
+.line-no { color: var(--warn); margin-right: 0.6rem; font-size: 0.85rem; white-space: nowrap; }
+
+/* Neo-tree */
+.neo-tree-split { display: flex; }
+.neo-tree-panel {
+  flex: 0 0 15rem;
+  padding: 10px 0;
+  border-right: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 15px;
+  white-space: pre;
+}
+.neo-tree-node { padding: 0 12px; line-height: 1.5; }
+.neo-tree-node.cursor-line { background: var(--selection); }
+.neo-tree-icon, .neo-tree-dir { color: var(--accent); }
+.neo-tree-git.modified { color: var(--warn); }
+.neo-tree-git.untracked { color: var(--ok); }
+.neo-tree-buffer { flex: 1; opacity: 0.6; }

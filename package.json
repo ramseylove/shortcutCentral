@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test --trace off"
+    "test:e2e": "playwright test --trace off",
+    "pack:draft": "node scripts/pack-draft.ts"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",
@@ -22,9 +23,11 @@
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
     "ts-fsrs": "^5.4.2",
+    "wasmoon": "^1.16.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
     "@playwright/test": "1.63.0",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",

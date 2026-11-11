@@ -44,6 +44,8 @@ for (const [packId, lessonId] of [
   ['telescope', 'open-results'],
   ['telescope', 'quickfix'],
   ['gitsigns', 'hunk-actions'],
+  ['neo-tree', 'tree-navigation'],
+  ['neo-tree', 'clipboard-and-view'],
   ['telescope-fzf-native', 'search-syntax'],
 ]) {
   test(`${packId}/${lessonId} can be completed with real keys`, async ({ page }) => {
@@ -52,7 +54,7 @@ for (const [packId, lessonId] of [
     await seedProgress(
       page,
       [...new Set(['core/basics', 'telescope/open-pickers', ...lessons.slice(0, index).map((l) => `${packId}/${l.id}`)])],
-      ['telescope', 'telescope-fzf-native', 'gitsigns'],
+      ['telescope', 'telescope-fzf-native', 'gitsigns', 'neo-tree'],
     );
     expect(await completeLesson(page, lessonId, packId)).toBe(lessons[index].items.length * 3);
     await expect(page.getByTestId('lesson-summary')).toContainText('100%');

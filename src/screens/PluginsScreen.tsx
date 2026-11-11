@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { getApp } from '../apps';
 import { isBuiltIn, useEnabledPacks } from '../packs/enabled';
 import { packsForApp } from '../packs/registry';
+import { resolveConfig } from '../config/resolve';
+import type { StoredConfig } from '../store/config';
 import { setPackEnabled } from '../store/packs';
 import { settingNames, useSetting } from '../store/settings';
 
@@ -11,8 +13,13 @@ export function PluginsScreen() {
   const app = getApp(appId);
   const enabled = useEnabledPacks(appId);
   const chosen = useSetting<string[]>(settingNames.enabledPacks(appId), []);
+  const config = useSetting<StoredConfig | null>(settingNames.config(appId), null);
   if (!app) return <p>Unknown app “{appId}”.</p>;
-  if (!enabled || !chosen) return null;
+  if (!enabled || !chosen || config === undefined) return null;
+
+  const withoutPack = config
+    ? resolveConfig(appId, config.recording).plugins.filter((plugin) => !plugin.packId)
+    : [];
 
   const all = packsForApp(appId);
   const plugins = all.filter((pack) => !isBuiltIn(pack));
@@ -61,6 +68,25 @@ export function PluginsScreen() {
           );
         })}
       </ul>
+      {withoutPack.length > 0 && (
+        <section data-testid="plugins-without-pack">
+          <h2>In your config, without a pack</h2>
+          <p className="lede">
+            No pack exists yet for these plugins. A first draft of one can be generated from a plugin's documentation
+            with the command shown, run in a checkout of this project.
+          </p>
+          <ul className="plugin-list">
+            {withoutPack.map((plugin) => (
+              <li key={plugin.repo} className="plugin">
+                <div>
+                  <div className="plugin-name">{plugin.repo}</div>
+                  <code className="plugin-meta">npm run pack:draft -- {plugin.repo}</code>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ export const DEFAULT_SESSION_CAP = 30;
 export const settingNames = {
   sessionCap: 'sessionCap',
   enabledPacks: (appId: string) => `${appId}/enabledPacks`,
+  config: (appId: string) => `${appId}/config`,
 };
 
 export async function getSetting<T>(name: string, fallback: T): Promise<T> {

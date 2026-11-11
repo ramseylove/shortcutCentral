@@ -1,5 +1,8 @@
+import { useSyncExternalStore } from 'react';
 import { HashRouter, NavLink, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { DEFAULT_APP_ID } from './apps';
+import { getConfigVersion, subscribeConfig } from './config/active';
+import { ConfigScreen } from './screens/ConfigScreen';
 import { CurriculumScreen } from './screens/CurriculumScreen';
 import { KeyTestScreen } from './screens/KeyTestScreen';
 import { LessonScreen } from './screens/LessonScreen';
@@ -19,6 +22,7 @@ function Shell() {
         <NavLink to={`/${app}/curriculum`}>Curriculum</NavLink>
         <NavLink to={`/${app}/plugins`}>Plugins</NavLink>
         <NavLink to={`/${app}/reference`}>Reference</NavLink>
+        <NavLink to={`/${app}/config`}>Config</NavLink>
         <NavLink to="/settings">Settings</NavLink>
         <NavLink to="/key-test">Key test</NavLink>
       </nav>
@@ -30,20 +34,23 @@ function Shell() {
 }
 
 export function App() {
+  // Applying a config changes what packs contain, so every screen that shows packs starts over.
+  const configVersion = useSyncExternalStore(subscribeConfig, getConfigVersion);
   return (
     <HashRouter>
       <Routes>
         <Route element={<Shell />}>
-          <Route path="/:appId/today" element={<TodayScreen />} />
-          <Route path="/:appId/curriculum" element={<CurriculumScreen />} />
-          <Route path="/:appId/plugins" element={<PluginsScreen />} />
-          <Route path="/:appId/reference" element={<ReferenceScreen />} />
+          <Route path="/:appId/today" element={<TodayScreen key={configVersion} />} />
+          <Route path="/:appId/curriculum" element={<CurriculumScreen key={configVersion} />} />
+          <Route path="/:appId/plugins" element={<PluginsScreen key={configVersion} />} />
+          <Route path="/:appId/reference" element={<ReferenceScreen key={configVersion} />} />
+          <Route path="/:appId/config" element={<ConfigScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
           <Route path="/key-test" element={<KeyTestScreen />} />
         </Route>
         {/* Lessons and reviews run outside the shell, covering the whole window. */}
-        <Route path="/:appId/lesson/:packId/:lessonId" element={<LessonScreen />} />
-        <Route path="/:appId/review" element={<ReviewScreen />} />
+        <Route path="/:appId/lesson/:packId/:lessonId" element={<LessonScreen key={configVersion} />} />
+        <Route path="/:appId/review" element={<ReviewScreen key={configVersion} />} />
         <Route path="*" element={<Navigate to={`/${DEFAULT_APP_ID}/today`} replace />} />
       </Routes>
     </HashRouter>

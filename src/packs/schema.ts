@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { parseKeys } from '../keys/notation.ts';
 
 /** Mock surfaces that exist as React components. Pack items may only name these. */
-export const MOCK_NAMES = ['editor', 'telescope-picker', 'gitsigns-buffer'] as const;
+export const MOCK_NAMES = ['editor', 'telescope-picker', 'gitsigns-buffer', 'neo-tree-panel'] as const;
+
+/** Id of the pack generated from the user's config. Pack files may not use it. */
+export const MY_CONFIG_PACK_ID = 'my-config';
 
 /** Marks the cursor position in a goal item's `start` and `end` buffers. */
 export const CURSOR_MARK = '|';
@@ -28,7 +31,8 @@ const itemBase = {
   prompt: z.string().min(1),
   /** Accepted sequences in Neovim notation. The first is the canonical answer. */
   keys: keysField,
-  source: z.enum(['default', 'suggested']).default('default'),
+  /** `config` is set by the app when the user's config maps the action; pack files may not use it. */
+  source: z.enum(['default', 'suggested', 'config']).default('default'),
   /** Command strings or Lua references that identify this action in a user's config. */
   match: z.array(z.string()).optional(),
 };
@@ -102,8 +106,18 @@ export const packSchema = z
           });
         }
         itemIds.add(item.id);
+        if (item.source === 'config') {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'source "config" is set by the app and cannot be used in a pack file',
+            path: ['lessons', li, 'items', ii, 'source'],
+          });
+        }
       });
     });
+    if (pack.id === MY_CONFIG_PACK_ID) {
+      ctx.addIssue({ code: 'custom', message: `"${MY_CONFIG_PACK_ID}" is reserved for the generated pack`, path: ['id'] });
+    }
   });
 
 export type Pack = z.infer<typeof packSchema>;

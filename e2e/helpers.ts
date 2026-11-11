@@ -6,7 +6,7 @@ import type { Pack } from '../src/packs/schema';
 
 const loadPack = (id: string) => parse(fs.readFileSync(`packs/neovim/${id}.yaml`, 'utf8')) as Pack;
 export const core = loadPack('core');
-export const packs = [core, loadPack('telescope'), loadPack('telescope-fzf-native'), loadPack('gitsigns')];
+export const packs = [core, loadPack('telescope'), loadPack('telescope-fzf-native'), loadPack('gitsigns'), loadPack('neo-tree')];
 
 const NAMED: Record<string, string> = {
   Esc: 'Escape',

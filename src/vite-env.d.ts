@@ -5,3 +5,8 @@ declare module 'virtual:packs' {
   const packs: Pack[];
   export default packs;
 }
+
+declare module '*.lua?raw' {
+  const text: string;
+  export default text;
+}

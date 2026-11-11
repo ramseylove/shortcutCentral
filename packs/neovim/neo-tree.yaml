@@ -1,0 +1,204 @@
+# Mappings checked against neo-tree.nvim (default branch) on 2026-11-11:
+# doc/neo-tree.txt, sections NAVIGATION, FILE ACTIONS, VIEW CHANGES and FILTER,
+# and the default `window.mappings` table in README.md for `q` and `?`.
+# Every item is a default mapping inside the tree window. Neo-tree sets no
+# mapping for opening the tree, so none is taught here.
+id: neo-tree
+app: neovim
+name: Neo-tree
+version: 1
+repo: nvim-neo-tree/neo-tree.nvim
+requires: [core]
+lessons:
+  - id: tree-navigation
+    title: Moving around the tree
+    items:
+      - id: open-node
+        action: neo-tree.open
+        type: keys
+        prompt: Open the file under the cursor, or expand the directory
+        keys: ["<CR>"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: toggle-node
+        action: neo-tree.toggle_node
+        type: keys
+        prompt: Expand or collapse the directory under the cursor
+        keys: ["<Space>"]
+        surface: { mock: neo-tree-panel, line: 2 }
+      - id: close-node
+        action: neo-tree.close_node
+        type: keys
+        prompt: Close the directory under the cursor, or its parent if it is already closed
+        keys: ["C"]
+        surface: { mock: neo-tree-panel, line: 5 }
+      - id: close-all-nodes
+        action: neo-tree.close_all_nodes
+        type: keys
+        prompt: Collapse every directory in the tree
+        keys: ["z"]
+        surface: { mock: neo-tree-panel, line: 2 }
+      - id: navigate-up
+        action: neo-tree.navigate_up
+        type: keys
+        prompt: Move the tree's root up one directory
+        keys: ["<BS>"]
+        surface: { mock: neo-tree-panel, line: 1 }
+      - id: set-root
+        action: neo-tree.set_root
+        type: keys
+        prompt: Make the directory under the cursor the tree's root
+        keys: ["."]
+        surface: { mock: neo-tree-panel, line: 2 }
+      - id: show-help
+        action: neo-tree.show_help
+        type: keys
+        prompt: Show the list of the tree's key mappings
+        keys: ["?"]
+        surface: { mock: neo-tree-panel, line: 1 }
+      - id: close-window
+        action: neo-tree.close_window
+        type: keys
+        prompt: Close the tree window
+        keys: ["q"]
+        surface: { mock: neo-tree-panel, line: 1 }
+  - id: opening-files
+    title: Choosing where a file opens
+    items:
+      - id: open-split
+        action: neo-tree.open_split
+        type: keys
+        prompt: Open the file under the cursor in a horizontal split
+        keys: ["S"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: open-vsplit
+        action: neo-tree.open_vsplit
+        type: keys
+        prompt: Open the file under the cursor in a vertical split
+        keys: ["s"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: open-tabnew
+        action: neo-tree.open_tabnew
+        type: keys
+        prompt: Open the file under the cursor in a new tab
+        keys: ["t"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: toggle-preview
+        action: neo-tree.toggle_preview
+        type: keys
+        prompt: Turn preview mode on or off
+        keys: ["P"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: focus-preview
+        action: neo-tree.focus_preview
+        type: keys
+        prompt: Move focus into the preview window
+        keys: ["l"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: revert-preview
+        action: neo-tree.revert_preview
+        type: keys
+        prompt: End preview mode and put the previewed window back
+        keys: ["<Esc>"]
+        surface: { mock: neo-tree-panel, line: 4 }
+  - id: file-actions
+    title: Creating, renaming and deleting
+    items:
+      - id: add
+        action: neo-tree.add
+        type: keys
+        prompt: Create a new file or directory here
+        keys: ["a"]
+        surface: { mock: neo-tree-panel, line: 2 }
+      - id: add-directory
+        action: neo-tree.add_directory
+        type: keys
+        prompt: Create a new directory here
+        keys: ["A"]
+        surface: { mock: neo-tree-panel, line: 2 }
+      - id: delete
+        action: neo-tree.delete
+        type: keys
+        prompt: Delete the file under the cursor
+        keys: ["d"]
+        surface: { mock: neo-tree-panel, line: 6 }
+      - id: rename
+        action: neo-tree.rename
+        type: keys
+        prompt: Rename the file under the cursor
+        keys: ["r"]
+        surface: { mock: neo-tree-panel, line: 6 }
+      - id: rename-basename
+        action: neo-tree.rename_basename
+        type: keys
+        prompt: Rename the file under the cursor, keeping its extension
+        keys: ["b"]
+        surface: { mock: neo-tree-panel, line: 6 }
+      - id: copy
+        action: neo-tree.copy
+        type: keys
+        prompt: Copy the file under the cursor to a path you type
+        keys: ["c"]
+        surface: { mock: neo-tree-panel, line: 6 }
+      - id: move
+        action: neo-tree.move
+        type: keys
+        prompt: Move the file under the cursor to a path you type
+        keys: ["m"]
+        surface: { mock: neo-tree-panel, line: 6 }
+      - id: show-file-details
+        action: neo-tree.show_file_details
+        type: keys
+        prompt: Show the size and dates of the file under the cursor
+        keys: ["i"]
+        surface: { mock: neo-tree-panel, line: 6 }
+  - id: clipboard-and-view
+    title: Clipboard, hidden files and filtering
+    items:
+      - id: copy-to-clipboard
+        action: neo-tree.copy_to_clipboard
+        type: keys
+        prompt: Mark the file under the cursor to be copied
+        keys: ["y"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: cut-to-clipboard
+        action: neo-tree.cut_to_clipboard
+        type: keys
+        prompt: Mark the file under the cursor to be moved
+        keys: ["x"]
+        surface: { mock: neo-tree-panel, line: 4 }
+      - id: paste-from-clipboard
+        action: neo-tree.paste_from_clipboard
+        type: keys
+        prompt: Copy or move the marked files into the directory under the cursor
+        keys: ["p"]
+        surface: { mock: neo-tree-panel, line: 5 }
+      - id: clear-clipboard
+        action: neo-tree.clear_clipboard
+        type: keys
+        prompt: Clear the tree's clipboard
+        keys: ["<C-r>"]
+        surface: { mock: neo-tree-panel, line: 5 }
+      - id: toggle-hidden
+        action: neo-tree.toggle_hidden
+        type: keys
+        prompt: Show or hide hidden files
+        keys: ["H"]
+        surface: { mock: neo-tree-panel, line: 1 }
+      - id: refresh
+        action: neo-tree.refresh
+        type: keys
+        prompt: Rescan the file system and redraw the tree
+        keys: ["R"]
+        surface: { mock: neo-tree-panel, line: 1 }
+      - id: fuzzy-finder
+        action: neo-tree.fuzzy_finder
+        type: keys
+        prompt: Filter the tree as you type
+        keys: ["/"]
+        surface: { mock: neo-tree-panel, line: 1 }
+      - id: clear-filter
+        action: neo-tree.clear_filter
+        type: keys
+        prompt: Remove the tree's filter
+        keys: ["<C-x>"]
+        surface: { mock: neo-tree-panel, line: 1 }
