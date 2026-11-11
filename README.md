@@ -14,6 +14,14 @@ npm run test:e2e   # Playwright: lessons completed with real key events
 npm run build      # typecheck, validate packs, build to dist/
 ```
 
+## Deployment
+
+`.github/workflows/pages.yml` runs the unit tests, builds the site and
+publishes `dist/` to GitHub Pages on every push to the default branch. The
+repository's Pages source must be set to "GitHub Actions" (Settings → Pages).
+The build uses relative asset paths and hash routing, so it works under the
+`/<repo>/` path without configuration.
+
 ## Layout
 
 | Path | Contents |
